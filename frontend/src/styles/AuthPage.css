@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Monoton&display=swap');
+
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: Arial, sans-serif;
+}
+
+.auth-image {
+  position: relative;
+  flex: 1;
+  background-image: url('../assets/auth-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  display: none;
+}
+
+.app-name {
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  border-radius: 4px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ;
+  height: 70px;
+  width: 70px;
+}
+
+.app-logo {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+}
+
+.auth-form {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.form-box {
+  width: 100%;
+  max-width: 400px;
+  color: black;
+  text-align: center;
+}
+
+.auth-form form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.auth-form input {
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fbfbfb;
+  color: black;
+}
+
+.auth-form button {
+  padding: 12px;
+  background: linear-gradient(135deg, #b3e1f2, #8fa3e0, #9a86db);
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.auth-form button:hover {
+  background: linear-gradient(135deg, #9ed6eb, #7892dd, #8369da);
+}
+
+.auth-form p {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.auth-form a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.auth-form a:hover {
+  text-decoration: underline;
+}
+
+/* Show image on medium+ screens */
+@media (min-width: 768px) {
+  .auth-image {
+    display: block;
+  }
+}

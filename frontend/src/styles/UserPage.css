@@ -1,0 +1,30 @@
+.user-page-container {
+  background-color: #fbfbfb;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-card {
+  background: linear-gradient(135deg, #b3e1f2, #8fa3e0, #9a86db);
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 50%;
+  
+}
+
+.user-heading {
+  margin-bottom: 20px;
+  color: #fbfbfb;
+  font-size: 24px;
+}
+
+.user-text {
+  margin-bottom: 10px;
+  color: #fbfbfb;
+  font-size: 16px;
+}
