@@ -74,7 +74,7 @@
 
 .auth-form button {
   padding: 12px;
-  background: linear-gradient(135deg, #b3e1f2, #8fa3e0, #9a86db);
+  background-color: #b6b0e2;
   border: none;
   color: white;
   font-weight: bold;
@@ -83,7 +83,7 @@
 }
 
 .auth-form button:hover {
-  background: linear-gradient(135deg, #9ed6eb, #7892dd, #8369da);
+  background-color: #908cc6;
 }
 
 .auth-form p {
