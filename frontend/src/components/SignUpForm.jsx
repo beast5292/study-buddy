@@ -11,7 +11,7 @@ const SignUpForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('http://localhost:5000/api/auth/signup', {
+        const res = await fetch('http://127.0.0.1:8000/addUser', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password }),
@@ -19,7 +19,7 @@ const SignUpForm = () => {
 
         if (res.ok) {
             // Sign in the user immediately after signup
-            const loginRes = await fetch('http://localhost:5000/api/auth/signin', {
+            const loginRes = await fetch('http://127.0.0.1:8000/findUser', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -27,7 +27,6 @@ const SignUpForm = () => {
 
             const loginData = await loginRes.json();
             if (loginRes.ok) {
-                localStorage.setItem('token', loginData.accessToken);
                 navigate('/user');
             } else {
                 alert(loginData.message);
