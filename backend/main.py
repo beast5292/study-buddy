@@ -1,6 +1,6 @@
 import motor.motor_asyncio
 from dotenv import dotenv_values
-from bson.objectid import ObjectId
+from passlib.context import CryptContext
 
 from fastapi import FastAPI
 from fastapi import Body
@@ -27,8 +27,14 @@ def user_helper(user) -> dict:
         "password": user["password"]
     }
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash(password): 
+    return pwd_context.hash(password, salt="a"*21 + "e")
+
+
 # Add a new user into the db
-async def add_user(user_data: dict) -> dict:
+async def add_user(user_data: dict) -> dict:  
     user = await user_collection.insert_one(user_data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
@@ -52,11 +58,15 @@ app.add_middleware(
 @app.post("/addUser", response_description="User data added into the database")
 async def add_user_data(user: UserCreate = Body(...)):
     user = jsonable_encoder(user)
+    hashed_pwd = hash(user["password"])
+    user["password"] = hashed_pwd 
     new_user = await add_user(user)
     return ResponseModel(new_user, "User added successfully.")
 
 @app.post('/findUser', response_description="Finding specific user data from the database")
 async def find_user_data(user: UserLogin = Body(...)):
     user = jsonable_encoder(user)
+    hashed_pwd = pwd_context.hash(user["password"], salt="a"*21 + "e")
+    user["password"] = hashed_pwd
     found_user = await find_user(user)
     return ResponseModel(found_user, "User found successfully.")

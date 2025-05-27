@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr
-from datetime import datetime
 
 class UserCreate(BaseModel):
    name: str
@@ -16,3 +15,4 @@ def ResponseModel(data, message):
         "code": 200,
         "message": message,
     }
+
