@@ -2,11 +2,13 @@ import motor.motor_asyncio
 from dotenv import dotenv_values
 from passlib.context import CryptContext
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from fastapi import Body
 from fastapi.encoders import jsonable_encoder
 from models import (UserCreate, UserLogin, ResponseModel, Token, TokenData)
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime, timedelta
+from jose import JWTError, jwt
 
 config = dotenv_values(".env")
 
@@ -17,7 +19,7 @@ database = client.db_name
 
 user_collection = database.get_collection("users_collection")
 
-'''Creating a quick helper functino for parsing the results from a db
+'''Creating a quick helper function for parsing the results from a db
    query into a python dict'''
 
 def user_helper(user) -> dict:
@@ -31,6 +33,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash(password): 
     return pwd_context.hash(password, salt="a"*21 + "e")
+
+def create_access_token(data: dict):
+    to_encode = data.copy()  
+    expire = datetime.now() + timedelta(minutes=1)
+    to_encode.update({"exp": expire})  
+    encoded_jwt = jwt.encode(to_encode, config["SECRET_KEY"], algorithm=config["ALGORITHM"])
+    return encoded_jwt
 
 # Add a new user into the db
 async def add_user(user_data: dict) -> dict:  
@@ -68,4 +77,13 @@ async def find_user_data(user: UserLogin = Body(...)):
     hashed_pwd = pwd_context.hash(user["password"], salt="a"*21 + "e")
     user["password"] = hashed_pwd
     found_user = await find_user(user)
-    return ResponseModel(found_user, "User found successfully.")
+    if not found_user:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid credentails")
+    
+    # Creating and access token using the user's email as the payload
+    user_data = {
+        "email": found_user["email"]
+    }
+    access_token = create_access_token(data=user_data)
+    print("access_token: ", access_token)
+    return {"access_token": access_token, "token_type": "bearer"}
