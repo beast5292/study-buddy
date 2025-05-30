@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from fastapi import FastAPI
 from fastapi import Body
 from fastapi.encoders import jsonable_encoder
-from models import (UserCreate, UserLogin, ResponseModel)
+from models import (UserCreate, UserLogin, ResponseModel, Token, TokenData)
 from fastapi.middleware.cors import CORSMiddleware
 
 config = dotenv_values(".env")
@@ -31,7 +31,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash(password): 
     return pwd_context.hash(password, salt="a"*21 + "e")
-
 
 # Add a new user into the db
 async def add_user(user_data: dict) -> dict:  
