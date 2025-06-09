@@ -7,15 +7,22 @@ const UserPage = () => {
     const onFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
     };
-    const onFileUpload = () => {
+    const onFileUpload = async () => {
         const formData = new FormData();
         formData.append(
             "myFile",
              selectedFile,
-             selectedFile.name
         );
         console.log(selectedFile);
         //Add the fetch method to pass the data to the backend api
+        const res = await fetch("http://127.0.0.1:8000/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (res.ok) {
+            console.log("file uploaded successfully")
+        }
     };
     const fileData = () => {
         if (selectedFile) {

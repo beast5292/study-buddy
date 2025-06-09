@@ -2,7 +2,7 @@ import motor.motor_asyncio
 from dotenv import dotenv_values
 from passlib.context import CryptContext
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, File, UploadFile
 from fastapi import Body
 from fastapi.encoders import jsonable_encoder
 from models import (UserCreate, UserLogin, ResponseModel, Token, TokenData)
@@ -87,3 +87,9 @@ async def find_user_data(user: UserLogin = Body(...)):
     access_token = create_access_token(data=user_data)
     print("access_token: ", access_token)
     return {"access_token": access_token, "token_type": "bearer"}
+
+@app.post('/upload', response_description="Handling the file sent from the frontend")
+async def upload(myFile: UploadFile = File(...)):
+        contents = await myFile.read()
+        print("File Name: ", myFile.filename)
+
