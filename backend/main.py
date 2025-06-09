@@ -15,7 +15,7 @@ config = dotenv_values(".env")
 client = motor.motor_asyncio.AsyncIOMotorClient(config["MONGODB_URI"])
 db_name = config["DB_Name"]
 
-database = client.db_name 
+database = client[db_name]
 
 user_collection = database.get_collection("users_collection")
 

@@ -15,9 +15,9 @@ const AuthPage = () => {
             {/* Right: Form */}
             <div className="auth-form">
                 <div className="form-box">
-                    <Outlet /> {/* 👈 This is where SignIn or SignUp will be injected */}
+                    <Outlet /> {/*This is where SignIn or SignUp will be injected */}
                 </div>
-            </div>
+            </div>  
         </div>
     );
 };
