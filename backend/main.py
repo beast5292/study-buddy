@@ -1,14 +1,22 @@
 import motor.motor_asyncio
+import nltk
+import docx
+import os
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
 from dotenv import dotenv_values
 from passlib.context import CryptContext
 
 from fastapi import FastAPI, HTTPException, status, File, UploadFile
 from fastapi import Body
+from fastapi.responses import FileResponse
 from fastapi.encoders import jsonable_encoder
 from models import (UserCreate, UserLogin, ResponseModel, Token, TokenData)
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
+from llama_index.llms.ollama import Ollama
+from docx import Document as DocxDocument
 
 config = dotenv_values(".env")
 
@@ -91,5 +99,84 @@ async def find_user_data(user: UserLogin = Body(...)):
 @app.post('/upload', response_description="Handling the file sent from the frontend")
 async def upload(myFile: UploadFile = File(...)):
         contents = await myFile.read()
+
+        #Saving to a temp file
+        with open("temp.docx", "wb") as f:
+            f.write(contents)
+
+        #Parsing docx to extract text
+        doc = DocxDocument("temp.docx")
+        full_text = "\n".join([para.text for para in doc.paragraphs])
+
         print("File Name: ", myFile.filename)
+        
+        print("Full text: ", full_text) 
+
+        # Tokenizing the text
+        stopWords = set(stopwords.words("english"))
+        words = word_tokenize(full_text)
+
+        # Creating a frequency table to keep the score of each word
+        freqTable = dict()
+        for word in words:
+            word = word.lower()
+            if word in stopWords:
+                 continue
+            if word in freqTable:
+                freqTable[word] += 1
+            else:
+                freqTable[word] = 1
+            
+        # Creating a dictionary to keep the score of each sentence
+        sentences = sent_tokenize(full_text)
+        sentenceValue = dict()
+
+        for sentence in sentences:
+            for word, freq in freqTable.items():
+                if word in sentence.lower():
+                    if sentence in sentenceValue:
+                        sentenceValue[sentence] += freq
+                    else:
+                        sentenceValue[sentence] = freq
+        
+        sumValues = 0
+        for sentence in sentenceValue:
+            sumValues += sentenceValue[sentence]
+        
+        # Average value of a sentence from the original text
+        average = int(sumValues / len(sentenceValue))
+
+        # Writing the summary to a docx file
+        doc = docx.Document()
+        # Adding a paragraph to the document
+        p = doc.add_paragraph()
+        # Adding some formatting to the paragraph
+        p.paragraph_format.line_spacing = 1
+        p.paragraph_format.space_after = 0
+
+        # Storing sentences into our summary or docx file
+        summary = ""
+        for sentence in sentences:
+            if (sentence in sentenceValue) and (sentenceValue[sentence] > (1.2 * average)):
+                summary += " " + sentence
+                
+                # Adding a run to the paragraph
+                p.add_run(sentence)
+
+        print("summary: ", summary)
+
+        # Saving the document
+        doc.save("summary.docx")
+
+@app.get("/download", response_description="Returning the summary docx file")
+def download_file():
+    # Getting the current working directory
+    cwd = os.getcwd()
+    file_path = cwd + "/summary.docx"
+    return FileResponse(path=file_path, filename="summary.docx", media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        
+        
+
+
+
 
