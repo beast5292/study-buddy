@@ -36,11 +36,11 @@ const UserPage = () => {
                 });
         }
     };
-    const fileData = () => {
+    /* const fileData = () => {
         if (selectedFile) {
             return (
-                <div>
-                    <h2>File Information:</h2>
+                <div className='file-info'>
+                    <h4>File Information:</h4>
                     <p>File Name: {selectedFile.name}</p>
                     <p>File Type: {selectedFile.type}</p>
                     <p>
@@ -49,25 +49,19 @@ const UserPage = () => {
                     </p>
                 </div>
             );
-        } else {
-            return (
-                <div>
-                    <br />
-                    <h4>Choose the file</h4>
-                </div>
-            );
         }
-    };
+    }; */
 
     return (
         <div className='user-page-container'>
             <h1>StudyBuddy</h1>
             <h3>AI word document summarizer</h3>
             <div>
-                <input type="file" onChange={onFileChange} />
+                <input className='file-input' type="file" onChange={onFileChange} />
+                <br />
                 <button onClick={onFileUpload}>Upload</button>
             </div>
-            {fileData()}
+            {/* {fileData()} */}
         </div>
     );
 };

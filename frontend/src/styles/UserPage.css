@@ -16,3 +16,32 @@
 .user-page-container h3 {
   margin-bottom: 40px;
 }
+
+.file-input {
+  color: black;
+  display: inline-block;
+  background: white;
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 6px;
+  width: 50%;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #c4d9ff;
+  border-style: none;
+  padding: 8px;
+  color: #fbfbfb;
+  border-radius: 3px;
+}
+
+button {
+  background-color: #c4d9ff;
+  border-style: none;
+  padding: 10px 8px;
+  color: white;
+  font-weight: bold;
+  border-radius: 3px;
+  margin-top: 10px;
+  width: 52%;
+}
